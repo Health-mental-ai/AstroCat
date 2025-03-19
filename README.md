@@ -43,3 +43,28 @@ The integration of **Large Language Models (LLMs)** into mental health care pres
 
 📖 Reference  
 Guo, Z., Lai, A., Thygesen, J. H., Farrington, J., Keen, T., & Li, K. (2024). **Large language model for mental health: A systematic review**. *arXiv preprint arXiv:2403.15401*.  
+
+### Advantages of Implementing a Companion Robot as a Web-Based Platform  
+
+The implementation of a **companion robot through a web-based platform** offers numerous advantages over traditional physical robots, particularly in terms of **cost-effectiveness, scalability, and interactive capabilities**.  
+
+## 1. Cost Efficiency and Accessibility  
+- Physical companion robots typically cost **$150 or more per unit**, making them financially burdensome for widespread adoption.  
+- A **web-based AI companion eliminates hardware costs**, allowing for **instant, free, or low-cost access** for a global user base.
+
+## 2. Enhanced Interactivity Beyond Physical Robots  
+- Many physical companion robots lack true conversational capabilities.
+- A **web-based AI companion, powered by LLMs**, provides **dynamic, intelligent, and personalized conversations**, significantly enhancing the user experience.  
+
+## 3. Scalable and Ubiquitous Availability  
+- Unlike physical robots, which require **manufacturing, maintenance, and distribution**, a web-based AI companion is **immediately available to users worldwide** via a simple internet connection.  
+- Can be **continuously updated** with new features, languages, and AI improvements without requiring hardware replacements.  
+
+## 4. Visual and Functional Parity with Physical Robots  
+- **Advanced UI/UX design** can replicate the **visual appeal and interactive presence** of a physical robot on-screen.  
+- Animated avatars, voice synthesis, and expressive responses **simulate the emotional connection of a real-life companion robot** without hardware constraints.  
+
+## 5. No Physical Limitations or Maintenance Costs  
+- Physical robots are **prone to wear and tear, battery limitations, and mechanical failures**.  
+- A **web-based companion** eliminates these concerns, providing a **long-lasting, always-functional solution**.  
+
