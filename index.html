@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion Robot Market Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #bb86fc;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #bb86fc;
+            margin-top: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #cf9fff;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .card {
+            background: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            flex: 1 1 300px;
+            border: 1px solid #333;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 30px 0;
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .data-point {
+            margin: 15px 0;
+            padding: 10px;
+            background: #2d1d42;
+            border-left: 4px solid #bb86fc;
+            border-radius: 4px;
+        }
+        .highlight {
+            background-color: #2d1d42;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #bb86fc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background-color: #2d1d42;
+            color: #bb86fc;
+        }
+        td {
+            background-color: #1e1e1e;
+        }
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .metric-box {
+            flex: 1 1 200px;
+            background: #1e1e1e;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid #333;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #bb86fc;
+            margin: 10px 0;
+        }
+        .metric-title {
+            font-size: 14px;
+            color: #9e9e9e;
+            text-transform: uppercase;
+        }
+        .recommendation {
+            background-color: #2d1d42;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid #bb86fc;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #333;
+            background-color: #1e1e1e;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 16px;
+            margin-top: 0;
+            color: #e0e0e0;
+        }
+        .tab button:hover {
+            background-color: #2d2d2d;
+        }
+        .tab button.active {
+            background-color: #6200ee;
+            color: white;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #333;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            background-color: #1e1e1e;
+        }
+    </style>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Initialize first tab when document loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the first tab by default
+            document.getElementById('MarketOverview').style.display = 'block';
+            
+            // Create and render all charts
+            createCharts();
+        });
+
+        function createCharts() {
+            // Dark theme for all charts
+            Chart.defaults.color = '#e0e0e0';
+            Chart.defaults.borderColor = '#333';
+            
+            // Purple color palette for charts
+            const purpleColors = {
+                primary: 'rgba(187, 134, 252, 1)',
+                primaryLight: 'rgba(187, 134, 252, 0.3)',
+                secondary: 'rgba(142, 77, 230, 1)',
+                secondaryLight: 'rgba(142, 77, 230, 0.3)',
+                tertiary: 'rgba(207, 159, 255, 1)',
+                tertiaryLight: 'rgba(207, 159, 255, 0.3)',
+                quaternary: 'rgba(117, 69, 194, 1)',
+                quaternaryLight: 'rgba(117, 69, 194, 0.3)'
+            };
+
+            // Market Size Chart
+            const marketSizeCtx = document.getElementById('marketSizeChart').getContext('2d');
+            
+            const marketSizeData = {
+                labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                datasets: [
+                    {
+                        label: 'Physical Robot Market ($ Billions)',
+                        data: [6.3, 7.5, 8.9, 10.6, 12.6, 15.0, 17.8],
+                        backgroundColor: purpleColors.secondaryLight,
+                        borderColor: purpleColors.secondary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Virtual Companion Market ($ Billions)',
+                        data: [1.8, 2.4, 3.1, 4.1, 5.4, 7.1, 9.2],
+                        backgroundColor: purpleColors.primaryLight,
+                        borderColor: purpleColors.primary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Total Market ($ Billions)',
+                        data: [8.1, 9.9, 12.0, 14.7, 18.0, 22.1, 27.0],
+                        backgroundColor: purpleColors.tertiaryLight,
+                        borderColor: purpleColors.tertiary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            };
+
+            new Chart(marketSizeCtx, {
+                type: 'line',
+                data: marketSizeData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Market Size ($ Billions)',
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Companion Robot Market Growth Projection (2024-2030)',
+                            color: '#bb86fc',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Profit Margin Chart
+            const profitMarginCtx = document.getElementById('profitMarginChart').getContext('2d');
+            
+            const profitMarginData = {
+                labels: ['R&D', 'Manufacturing', 'Distribution', 'Marketing', 'Customer Support', 'Profit Margin'],
+                datasets: [
+                    {
+                        label: 'Physical Robot Cost Structure (%)',
+                        data: [15, 40, 10, 15, 5, 15],
+                        backgroundColor: purpleColors.secondaryLight,
+                    },
+                    {
+                        label: 'Virtual Companion Cost Structure (%)',
+                        data: [25, 5, 1, 20, 10, 39],
+                        backgroundColor: purpleColors.primaryLight,
+                    }
+                ]
+            };
+
+            new Chart(profitMarginCtx, {
+                type: 'bar',
+                data: profitMarginData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Percentage of Revenue (%)',
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Cost Category',
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Cost Structure Comparison: Physical vs. Virtual',
+                            color: '#bb86fc',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Virtual Transition Chart
+            const virtualTransitionCtx = document.getElementById('virtualTransitionChart').getContext('2d');
+            
+            const virtualTransitionData = {
+                labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                datasets: [
+                    {
+                        label: 'Physical Robot Users (Millions)',
+                        data: [4.2, 5.0, 5.9, 7.0, 8.2, 9.8, 11.5],
+                        backgroundColor: purpleColors.secondaryLight,
+                        borderColor: purpleColors.secondary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Virtual Companion Users (Millions)',
+                        data: [12.0, 16.8, 23.5, 32.9, 46.1, 64.5, 90.3],
+                        backgroundColor: purpleColors.primaryLight,
+                        borderColor: purpleColors.primary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            };
+
+            new Chart(virtualTransitionCtx, {
+                type: 'line',
+                data: virtualTransitionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'User Base (Millions)',
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'User Base Growth: Physical vs. Virtual (2024-2030)',
+                            color: '#bb86fc',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revenue Projection Chart
+            const revenueProjectionCtx = document.getElementById('revenueProjectionChart').getContext('2d');
+            
+            const revenueProjectionData = {
+                labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                datasets: [
+                    {
+                        label: 'Revenue - Low Estimate ($ Millions)',
+                        data: [10.8, 35.7, 77.9, 184.1, 359.8],
+                        backgroundColor: purpleColors.secondaryLight,
+                        borderColor: purpleColors.secondary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Revenue - High Estimate ($ Millions)',
+                        data: [27.0, 89.3, 187.0, 414.2, 809.5],
+                        backgroundColor: purpleColors.primaryLight,
+                        borderColor: purpleColors.primary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Net Profit - Low Estimate ($ Millions)',
+                        data: [-0.4, 4.3, 13.4, 64.4, 145.0],
+                        backgroundColor: purpleColors.tertiaryLight,
+                        borderColor: purpleColors.tertiary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Net Profit - High Estimate ($ Millions)',
+                        data: [2.9, 17.9, 45.3, 149.1, 363.8],
+                        backgroundColor: purpleColors.quaternaryLight,
+                        borderColor: purpleColors.quaternary,
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            };
+
+            new Chart(revenueProjectionCtx, {
+                type: 'line',
+                data: revenueProjectionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: '$ Millions',
+                                color: '#e0e0e0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#333'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                color: '#e0e0e0'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '5-Year Virtual Companion Financial Projection',
+                            color: '#bb86fc',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e0e0e0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Companion Robot Market Analysis</h1>
+        <p>Market Size, Business Viability, and Virtual Transition Potential</p>
+    </header>
+
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'MarketOverview')">Market Overview</button>
+        <button class="tablinks" onclick="openTab(event, 'BusinessViability')">Business Viability</button>
+        <button class="tablinks" onclick="openTab(event, 'VirtualTransition')">Virtual Transition</button>
+        <button class="tablinks" onclick="openTab(event, 'FinancialProjections')">Financial Projections</button>
+    </div>
+
+    <div id="MarketOverview" class="tabcontent">
+        <h2>Companion Robot Market Overview</h2>
+        
+        <div class="metrics">
+            <div class="metric-box">
+                <div class="metric-title">Global Market Size (2024)</div>
+                <div class="metric-value">$8.1 Billion</div>
+                <div>Growing industry with diverse applications</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Expected CAGR (2024-2030)</div>
+                <div class="metric-value">23.7%</div>
+                <div>Accelerating growth trajectory</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Projected Market (2030)</div>
+                <div class="metric-value">$29.5 Billion</div>
+                <div>Substantial growth opportunity</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="marketSizeChart"></canvas>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <h3>Key Market Segments</h3>
+                <ul>
+                    <li><strong>Elderly Care:</strong> 38% of market share</li>
+                    <li><strong>Child Companionship:</strong> 22% of market share</li>
+                    <li><strong>Mental Health Support:</strong> 18% of market share</li>
+                    <li><strong>Educational Assistance:</strong> 12% of market share</li>
+                    <li><strong>Others:</strong> 10% of market share</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Regional Distribution</h3>
+                <ul>
+                    <li><strong>North America:</strong> 35% (Strong adoption in healthcare)</li>
+                    <li><strong>Asia Pacific:</strong> 32% (Japan leading, China growing rapidly)</li>
+                    <li><strong>Europe:</strong> 25% (Focus on elderly care solutions)</li>
+                    <li><strong>Rest of World:</strong> 8% (Emerging markets)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Key Market Drivers</h3>
+                <ul>
+                    <li>Aging population demographics</li>
+                    <li>Rising mental health awareness</li>
+                    <li>Technological advancements in AI and robotics</li>
+                    <li>Decreasing production costs</li>
+                    <li>Increased acceptance of robot companions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <h3>Market Challenges for Physical Robots</h3>
+            <ul>
+                <li><strong>High Production Costs:</strong> $1,200 - $5,000 per unit (average consumer models)</li>
+                <li><strong>Maintenance Requirements:</strong> Physical maintenance, software updates, repairs</li>
+                <li><strong>Technical Limitations:</strong> Battery life, mechanical failures, sensor degradation</li>
+                <li><strong>Distribution Challenges:</strong> Shipping costs, inventory management, global supply chain</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="BusinessViability" class="tabcontent">
+        <h2>Business Viability Analysis</h2>
+
+        <div class="data-point">
+            <strong>Current Physical Robot Economics:</strong> Average companion robots range from $1,200 for basic models to $5,000+ for advanced models, with production costs typically representing 60-70% of retail price.
+        </div>
+
+        <div class="chart-container">
+            <canvas id="profitMarginChart"></canvas>
+        </div>
+
+        <table id="businessModelTable">
+            <tr>
+                <th>Business Model Component</th>
+                <th>Physical Robot</th>
+                <th>Virtual Robot</th>
+            </tr>
+            <tr>
+                <td>Initial Development Cost</td>
+                <td>$2-10 million</td>
+                <td>$0.5-2 million</td>
+            </tr>
+            <tr>
+                <td>Production Cost (per unit)</td>
+                <td>$600-3,000</td>
+                <td>$0.1-0.3 (server cost)</td>
+            </tr>
+            <tr>
+                <td>Distribution Cost</td>
+                <td>$50-200 per unit</td>
+                <td>Near zero</td>
+            </tr>
+            <tr>
+                <td>Maintenance Cost (annual)</td>
+                <td>$100-500 per unit</td>
+                <td>$10-30 per user</td>
+            </tr>
+            <tr>
+                <td>Gross Margin</td>
+                <td>30-40%</td>
+                <td>70-85%</td>
+            </tr>
+            <tr>
+                <td>Typical Pricing Model</td>
+                <td>One-time purchase + warranty</td>
+                <td>Subscription ($5-20/month)</td>
+            </tr>
+            <tr>
+                <td>Customer Lifetime Value</td>
+                <td>$1,500-6,000</td>
+                <td>$240-960 (2-year subscription)</td>
+            </tr>
+            <tr>
+                <td>Scalability Potential</td>
+                <td>Limited by production capacity</td>
+                <td>Highly scalable</td>
+            </tr>
+        </table>
+
+        <div class="highlight">
+            <h3>Key Business Advantages of Virtual Transition</h3>
+            <ul>
+                <li><strong>Lower Barrier to Entry:</strong> Affordable access for wider consumer base</li>
+                <li><strong>Rapid Scalability:</strong> Ability to reach millions of users without physical production constraints</li>
+                <li><strong>Continuous Revenue:</strong> Subscription model provides steady, predictable cash flow</li>
+                <li><strong>Easier Updates:</strong> Seamless software updates and feature additions</li>
+                <li><strong>Global Reach:</strong> No shipping or customs limitations</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="VirtualTransition" class="tabcontent">
+        <h2>Virtual Companion Transition Analysis</h2>
+
+        <div class="metrics">
+            <div class="metric-box">
+                <div class="metric-title">Current Virtual Companion Market</div>
+                <div class="metric-value">$1.8 Billion</div>
+                <div>22% of total companion market</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Virtual CAGR (2024-2030)</div>
+                <div class="metric-value">31.4%</div>
+                <div>Outpacing physical robot growth</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Projected Virtual Market (2030)</div>
+                <div class="metric-value">$9.2 Billion</div>
+                <div>31% of total companion market</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="virtualTransitionChart"></canvas>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <h3>Virtual Platform Distribution</h3>
+                <ul>
+                    <li><strong>Mobile Apps:</strong> 52% (Highest convenience factor)</li>
+                    <li><strong>Desktop/Web:</strong> 28% (Work and education settings)</li>
+                    <li><strong>AR/VR:</strong> 15% (Growing rapidly with tech adoption)</li>
+                    <li><strong>Smart Home Integration:</strong> 5% (Emerging category)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Key Virtual Advantages</h3>
+                <ul>
+                    <li><strong>Accessibility:</strong> Available on devices users already own</li>
+                    <li><strong>Personalization:</strong> Advanced AI enables deeper customization</li>
+                    <li><strong>Integration:</strong> Connects with other digital services</li>
+                    <li><strong>Updates:</strong> Immediate feature and capability improvements</li>
+                    <li><strong>Data Analysis:</strong> Better understanding of user needs</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Target Demographics</h3>
+                <ul>
+                    <li><strong>Gen Z & Millennials:</strong> 45% (Digital-native preference)</li>
+                    <li><strong>Elderly Users:</strong> 25% (Simplified interfaces)</li>
+                    <li><strong>Education Sector:</strong> 20% (Learning companions)</li>
+                    <li><strong>Healthcare Applications:</strong> 10% (Therapy support)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <h3>Virtual Transition Challenges</h3>
+            <ul>
+                <li><strong>Physical Presence:</strong> Loss of tangible interaction benefits</li>
+                <li><strong>Competition:</strong> Lower barriers to entry increase competitive pressure</li>
+                <li><strong>User Retention:</strong> Higher churn rates compared to physical products</li>
+                <li><strong>Perceived Value:</strong> Establishing willingness to pay for digital companions</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="FinancialProjections" class="tabcontent">
+        <h2>Financial Projections for Virtual Transition</h2>
+
+        <div class="data-point">
+            <strong>Market Penetration Potential:</strong> Virtual companions can reach 5-10x the user base of physical robots due to lower cost barriers and accessibility.
+        </div>
+
+        <div class="chart-container">
+            <canvas id="revenueProjectionChart"></canvas>
+        </div>
+
+        <table id="financialProjectionsTable">
+            <tr>
+                <th>Financial Metric</th>
+                <th>Year 1</th>
+                <th>Year 3</th>
+                <th>Year 5</th>
+            </tr>
+            <tr>
+                <td>User Base (thousands)</td>
+                <td>100-250</td>
+                <td>500-1,200</td>
+                <td>2,000-4,500</td>
+            </tr>
+            <tr>
+                <td>Average Revenue Per User (monthly)</td>
+                <td>$8.99</td>
+                <td>$12.99</td>
+                <td>$14.99</td>
+            </tr>
+            <tr>
+                <td>Annual Revenue (millions)</td>
+                <td>$10.8-$27.0</td>
+                <td>$77.9-$187.0</td>
+                <td>$359.8-$809.5</td>
+            </tr>
+            <tr>
+                <td>Gross Margin</td>
+                <td>70%</td>
+                <td>75%</td>
+                <td>82%</td>
+            </tr>
+            <tr>
+                <td>Operating Costs (millions)</td>
+                <td>$8.0-$16.0</td>
+                <td>$45.0-$95.0</td>
+                <td>$150.0-$300.0</td>
+            </tr>
+            <tr>
+                <td>Net Profit (millions)</td>
+                <td>$(0.4)-$2.9</td>
+                <td>$13.4-$45.3</td>
+                <td>$145.0-$363.8</td>
+            </tr>
+            <tr>
+                <td>Profit Margin</td>
+                <td>-4% to 11%</td>
+                <td>17% to 24%</td>
+                <td>40% to 45%</td>
+            </tr>
+        </table>
+
+        <div class="highlight">
+            <h3>Revenue Stream Breakdown (Year 5)</h3>
+            <ul>
+                <li><strong>Basic Subscriptions:</strong> 55% of revenue ($7.99-$9.99/month)</li>
+                <li><strong>Premium Subscriptions:</strong> 30% of revenue ($14.99-$19.99/month)</li>
+                <li><strong>In-app Purchases:</strong> 10% of revenue (personality enhancements, capabilities)</li>
+                <li><strong>B2B Licensing:</strong> 5% of revenue (education, healthcare, corporate)</li>
