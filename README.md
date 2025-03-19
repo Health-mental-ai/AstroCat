@@ -19,7 +19,7 @@ AstroCat is more than just a chatbot—it's a **trusted companion** that empower
 
 The integration of **Large Language Models (LLMs)** into mental health care presents numerous advantages, making AI-driven support more **accessible, scalable, and effective** for a global audience.  
 
-## 🔹 Key Strengths of LLMs in Mental Health  
+## Key Strengths of LLMs in Mental Health  
 
 1. **Multilingual and Culturally Adaptive Support**  
    - LLMs can provide **mental health assistance in multiple languages**, making support accessible to diverse populations.  
