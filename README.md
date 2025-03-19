@@ -1,20 +1,20 @@
-### 🚀 AstroCat: LLM-Powered Companion Robot for Mental Health Care  
+### AstroCat: LLM-Powered Companion Robot for Mental Health Care  
 
 AstroCat is an advanced **LLM-based companion robot** designed to support mental well-being through intelligent and empathetic conversations. By leveraging state-of-the-art **AI language models**, AstroCat provides users with a **safe, engaging, and supportive chat experience**, fostering emotional resilience and reducing feelings of loneliness.  
 
-### 🌟 Key Features  
+### Key Features  
 - **AI-Driven Emotional Support** – Provides empathetic and context-aware responses.  
 - **Personalized Interactions** – Adapts to user preferences for a more tailored experience.  
 - **Conversational Therapy** – Offers guided conversations to encourage mindfulness and self-reflection.  
 - **Companion-Like Engagement** – Mimics the warmth and responsiveness of a real pet.  
 - **Privacy-Focused** – Ensures secure and confidential interactions.  
 
-### 🎯 Our Mission  
+### Our Mission  
 AstroCat is more than just a chatbot—it's a **trusted companion** that empowers individuals to navigate their mental health journey with **understanding, companionship, and AI-driven support**. By combining **cutting-edge LLM technology** with compassionate interaction, AstroCat aims to **bridge the gap between AI and emotional well-being**, making mental health care **more accessible and engaging** for everyone.  
 
 **If you found this helpful, please give it a star!**
 
-### 🌟 Advantages of Using Large Language Models (LLMs) in Mental Health Care  
+### Advantages of Using Large Language Models (LLMs) in Mental Health Care  
 ![image](https://github.com/user-attachments/assets/4c3b2c72-2750-4bad-8114-fc3c4a06340a)
 
 The integration of **Large Language Models (LLMs)** into mental health care presents numerous advantages, making AI-driven support more **accessible, scalable, and effective** for a global audience.  
